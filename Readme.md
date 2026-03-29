@@ -111,7 +111,13 @@ test_dataset = TensorDataset(X_test_tensor, y_test_tensor)
 
 ````
 ## Define Neural Networks Architecture
-Define the architecture of your Neural Networks and save it into a variable called `model`
+This MLP is a simple neural network that takes an input (like an image), flattens it into a list of numbers, and processes it step by step to make a prediction:
+
+Flatten input → converts the image into a vector of numbers
+First layer (fc1) → learns patterns from the input
+ReLU activation → keeps important signals, removes weak ones
+Dropout → randomly drops some neurons to prevent overfitting
+Final layer (fc2) → produces output scores for each class (prediction)
 
 ````python
 # Set seed in PyTorch to reproduce results
@@ -144,4 +150,22 @@ model = MLP(input_size, hidden_size, output_size).to(device)
 
 ````
 <img width="911" height="155" alt="image" src="https://github.com/user-attachments/assets/4b0b3be3-c739-4178-85d3-ff4528e80490" />
+
+## Training Neural Network 
+
+This setup is designed to effectively train a multi-class classification model by combining a reliable optimizer, an appropriate loss function, and a simple evaluation metric.
+- The Adam optimizer is used because it adaptively adjusts learning rates for each parameter, allowing the model to learn efficiently and converge faster without extensive tuning.
+- The CrossEntropyLoss is chosen as it is the standard loss function for multi-class classification, comparing the model’s predicted class probabilities with the true labels to measure how wrong the predictions are.
+- the accuracy function evaluates performance by selecting the class with the highest predicted score (using argmax) and calculating the proportion of correct predictions.
+````python
+# Optimizer and Loss Function
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+criterion = nn.CrossEntropyLoss()  # For multi-class classification
+
+def compute_accuracy(output,label):
+  prediction = torch.argmax(output, dim=1)
+  total_correct = (prediction == label).sum().item()
+  accuracy = total_correct / len(label)
+  return accuracy
+````
 
