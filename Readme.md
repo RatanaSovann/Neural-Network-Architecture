@@ -321,6 +321,7 @@ After lowering Epoch, decreasing the learning rate, and adjusting the number of 
 
 ### Confusion Matrix
 <p align="center"><img width="838" height="701" alt="image" src="https://github.com/user-attachments/assets/4c2d5a3b-5d4a-405d-9809-8ca6b00bd909" /><p align="center">
+
 The model seems to struggle to distinguish between the numbers 2 & 5, 4 & 7, and 0 & 4 the most.
 
 ## Limitations
