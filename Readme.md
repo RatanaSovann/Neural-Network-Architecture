@@ -1,4 +1,4 @@
-#  Neural Network Architecture (Multi Layered Perceptron)
+<img width="618" height="220" alt="image" src="https://github.com/user-attachments/assets/f26e44df-677a-49b2-bcb5-ec2f9053d295" />#  Neural Network Architecture (Multi Layered Perceptron)
 
 <p align="center"><img width="358" height="328" alt="image" src="https://github.com/user-attachments/assets/18c90c30-1c69-4776-b93a-ceabac0718e5" /><p align="center">
 
@@ -305,7 +305,33 @@ This could be due to insufficient regularization, a learning rate that’s sligh
 For the next experiment:
 - Lower learning rate to help stabilise validation loss.
 - Reduce the number of epochs to around 50, because evidence from the above graph indicates convergence occurring around those epochs
-- Add another dropout layer in fc2 to regularize the second hidden layer    
+- Add another dropout layer in fc2 to regularize the second hidden layer
+
+## Experiment 3:
+In this experiment we will:
+*   Lower learning rate to 0.001 or 0.0005
+*   Reduce number of epoch to 50
+*   Increase dropout rate 0.5 -> 0.6
+*   Add another dropout layer in fc2 to regularize the second hidden layer
+  
+<p align="center"><img width="822" height="402" alt="image" src="https://github.com/user-attachments/assets/4c78735c-b2c3-4386-9223-94cb9accfaab"/><p align="center">
+
+### Experiment Results: 
+<p align="center"><img width="822" height="402" alt="image" src="https://github.com/user-attachments/assets/05dbcd36-8c73-463e-9ee1-3cadb267cb83" /><p align="center">
+
+<p align="center"><img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/4b7b50b6-dc89-4126-9e1f-74a4a8c3a71f" /><p align="center">
+
+After lowering Epoch, decreasing the learning rate, and adjusting the number of hidden connections and dropout rates for both layers 1 and 2, we achieve a more stable version with minimal overfitting, while maintaining the target of over 80% accuracy.
+
+### Confusion Matrix
+<p align="center"><img width="838" height="701" alt="image" src="https://github.com/user-attachments/assets/4c2d5a3b-5d4a-405d-9809-8ca6b00bd909" /><p align="center">
+The model seems to struggle to distinguish between the numbers 2 & 5, 4 & 7, and 0 & 4 the most.
+
+## Limitations
+While we achieved the target of 80% accuracy there is still room for improvement. There is still a sign of slight overfit meaning the generalizability of the model could worsen over time. Other different combinations of the number of hidden connections and dropout rate could potentially be explored. More hidden layers could also be added with different dropout rates to find the best combinations that yield the most optimal performance/overfit tradeoff.
+
+
+
 
 
 
