@@ -149,7 +149,7 @@ output_size = 10
 model = MLP(input_size, hidden_size, output_size).to(device)
 
 ````
-<img width="911" height="155" alt="image" src="https://github.com/user-attachments/assets/4b0b3be3-c739-4178-85d3-ff4528e80490" />
+<p align="center"><img width="911" height="155" alt="image" src="https://github.com/user-attachments/assets/4b0b3be3-c739-4178-85d3-ff4528e80490" /><p align="center">
 
 ## Training Neural Network 
 
@@ -244,7 +244,7 @@ plt.title('Training Losses')
 plt.legend()
 plt.show()
 ````
-<Figure size 640x480 with 1 Axes><img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/281d488e-dfde-4321-b826-17b7316c7cce" />
+<p align="center"><Figure size 640x480 with 1 Axes><img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/281d488e-dfde-4321-b826-17b7316c7cce" /><p align="center">
 
 Plotting Confusion Matrix:
 
@@ -262,6 +262,50 @@ plt.ylabel('True labels')
 plt.title('Confusion Matrix')
 plt.show()
 ````
-<Figure size 1000x800 with 1 Axes><img width="838" height="701" alt="image" src="https://github.com/user-attachments/assets/fa4a0075-7706-43e3-a56e-dbb23d547a4a" />
+<p align="center"><Figure size 1000x800 with 1 Axes><img width="838" height="701" alt="image" src="https://github.com/user-attachments/assets/fa4a0075-7706-43e3-a56e-dbb23d547a4a" /><p align="center">
+
+## Experiment 1:
+In this architecture we will:
+
+*  Add another fully connected layer
+*  Increase hidden size to 512
+*  Use batch normalization to stabalize learning process and speed up convergence
+
+<p align="center"><p align="center"><img width="822" height="402" alt="image" src="https://github.com/user-attachments/assets/91ebf133-b598-45b2-80d6-b952b1257e4c" /><p align="center"><p align="center">
+
+### Experiment Results: 
+<p align="center"><img width="822" height="402" alt="image" src="https://github.com/user-attachments/assets/bd1d2e84-5299-45de-ac93-3b855e066504" /><p align="center">
+
+<p align="center"><img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/c41effdd-2146-40a6-b065-6ab8c5ae013e" /><p align="center">
+
+* The model obtains good results but severely overfits the training data as indicated by the divergence of training and validation loss and the relatively poorer performance on the testing set.
+  
+* Moving forward, experiment 2 will try to reduce overfitting by lowering the number of hidden neuron connections, adding batch_norm to layer 2, and adding L2 weight decay in Adam Optimizer.
+
+## Experiment 2:
+In this architecture we will
+
+*   reduce number of neurons connection in hidden layer 2 from 512 -> 256
+*   Add L2 weight decay to Adam optimizer
+*   Add batch norm to layer 2
+*   Depending on output of the training lower epochs
+
+<p align="center"><img width="822" height="402" alt="image" src="https://github.com/user-attachments/assets/0733f875-7bb2-4e16-9287-3ae16df2e440" /><p align="center">
+
+### Experiment Results: 
+<p align="center"><img width="822" height="402" alt="image" src="https://github.com/user-attachments/assets/c1a53bfa-6e1c-44d9-9e56-29e82ddf44d3" /><p align="center">
+
+<p align="center"><img width="575" height="455" alt="image" src="https://github.com/user-attachments/assets/10b3ccb6-8333-4f32-9e10-a6f1d2f29e27" /><p align="center">
+
+1. Training Loss (blue) is relatively stable around ~0.29–0.31.
+2. Validation Loss (orange) is consistently higher and fluctuates more (~0.31–0.36).
+   
+This could be due to insufficient regularization, a learning rate that’s slightly off, or a small validation set causing noisy estimates of loss. Since testing performance is also relatively poorer, it seems the model still does not generalize very well.
+
+For the next experiment:
+- Lower learning rate to help stabilise validation loss.
+- Reduce the number of epochs to around 50, because evidence from the above graph indicates convergence occurring around those epochs
+- Add another dropout layer in fc2 to regularize the second hidden layer    
+
 
 
