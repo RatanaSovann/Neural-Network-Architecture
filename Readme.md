@@ -161,11 +161,107 @@ This setup is designed to effectively train a multi-class classification model b
 # Optimizer and Loss Function
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 criterion = nn.CrossEntropyLoss()  # For multi-class classification
-
-def compute_accuracy(output,label):
-  prediction = torch.argmax(output, dim=1)
-  total_correct = (prediction == label).sum().item()
-  accuracy = total_correct / len(label)
-  return accuracy
 ````
+````python
+# Load Data with batch_size
+
+batch_size = 128
+epochs = 500
+
+train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True) # The training data is shuffled each epoch, which helps with model generalization.
+test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False) # The test data is not shuffled, ensuring consistent evaluation.
+
+````
+````python
+
+losses = []             # List to store individual batch losses
+epoch_losses = []       # Average loss per epoch for training
+total_loss = []         # Total loss for training
+train_accuracies = []   # Training accuracy per epoch
+
+for epoch in range(epochs):
+  model.train()       # Set the model to training model
+  loss_count = 0      # Accumulate training loss for the current epoch
+  total_correct=0     # Count correct prediction in training
+  total_train = 0   # Total number of training sample produced
+
+  for images, labels in train_dataloader:
+    images, labels = images.to(device), labels.to(device)   # Move to GPU if available
+
+    predicted_output = model(images)   # Forward Propagation to get predicted outcome
+    loss = criterion(predicted_output, labels)   # Calculate the loss
+    losses.append(loss.detach().cpu().numpy())      # Keep track of the loss
+
+    optimizer.zero_grad()     # Reset gradient
+    loss.backward()           # Backpropagation
+    optimizer.step()          # Update weights
+
+    # Track loss and accuracy
+    loss_count += loss.item()     # Accumulate training loss
+    _, predicted = torch.max(predicted_output, 1)
+    total_train += labels.size(0)
+    total_correct += (predicted == labels.argmax(dim=1)).sum().item()
+
+  total_loss.append(loss_count)   # Calculate the total loss and save it to a variable called total_loss
+  epoch_losses.append (loss_count/len(train_dataloader))  # Append the training loss
+  train_accuracies.append(total_correct / total_train)    # Append the training accuracy
+
+  print(f"Epoch {epoch+1}/{epochs}, Train Loss: {epoch_losses[-1]:.4f}, Total loss: {total_loss[-1]:.4f}, Train Accuracy: {train_accuracies[-1]:.4f}")
+
+````
+Initiate the model.eval() along with torch.no_grad() to turn off the gradients to evaluate model on test set after training
+
+````python
+model.eval()
+correct = 0
+total = 0
+
+# Get the predictions for the test dataset
+predicted_labels = []
+true_labels = []
+
+with torch.no_grad():
+  for images, labels in test_dataloader:
+    images, labels = images.to(device), labels.to(device) # Switch to GPU if available
+
+    outputs = model(images)
+    predicted = torch.max(outputs, 1)[1]  # Determine predicted classes
+    total += labels.size(0)
+    correct += (predicted == labels.argmax(dim=1)).sum().item()
+    predicted_labels.extend(predicted.tolist())
+    true_labels.extend(labels.argmax(dim=1).tolist())
+
+accuracy = correct / total
+print(f"Accuracy on the test set: {accuracy:.2%}")
+````
+Visualizing Training Results by plotting the learning curve:
+
+````python
+plt.plot(epoch_losses, label='Training Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.title('Training Losses')
+plt.legend()
+plt.show()
+````
+<Figure size 640x480 with 1 Axes><img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/281d488e-dfde-4321-b826-17b7316c7cce" />
+
+Plotting Confusion Matrix:
+
+````python
+# Import the packages for plotting the graph
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
+
+conf_matrix = confusion_matrix(true_labels, predicted_labels)
+# Plotting the confusion matrix
+plt.figure(figsize=(10, 8))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', cbar=False)
+plt.xlabel('Predicted labels')
+plt.ylabel('True labels')
+plt.title('Confusion Matrix')
+plt.show()
+````
+<Figure size 1000x800 with 1 Axes><img width="838" height="701" alt="image" src="https://github.com/user-attachments/assets/fa4a0075-7706-43e3-a56e-dbb23d547a4a" />
+
 
